@@ -1,0 +1,42 @@
+#импортируем всё, что нужно
+import numpy as np
+import matplotlib.pyplot as plt
+
+#читаем файл settings.txt и данные с него добавляем в список tmp
+with open("settings.txt", "r") as settings:
+    tmp = [float(i) for i in settings.read().split("\n")]
+
+#добавляем данные из data.txt в массив data_array
+data_array = np.loadtxt("data.txt", dtype = int)
+
+#переводим числа в массиве data_array в значения напряжений, используя шаг напряжения из tmp
+data_array = data_array * tmp[1]
+
+#создаём массив с секундами, используя шаг времени из tmp
+x = np.arange(0, 10, tmp[0])
+
+#создаём список и добавляем в него значения напряжений
+y = []
+for i in range(0, len(x)):
+    y.append(data_array[i])
+
+#строим график
+fig, ax = plt.subplots()
+ax.plot(x, y, c = 'red', marker = '^', linestyle = '-', linewidth = 1)
+
+#создаём главную и дополнительную сетки
+ax.grid(which = 'major', linewidth = 1)
+ax.grid(which = 'minor', linewidth = 0.5, linestyle = '-.')
+ax.minorticks_on()
+
+#добавляем легенду и подписи осям
+plt.legend('V(t)')
+plt.xlabel('Время, с')
+plt.ylabel('Напряжение, В')
+
+#добавляем заголовок
+plt.title("Процесс заряда и разряда конденсатора в RC-цепочке")
+
+#сохраняем и показываем график
+fig.savefig("график.png")
+plt.show()
